@@ -1,0 +1,34 @@
+{
+    "name": "nicolasperic/module-company-graphql",
+    "description": "GraphQL coverage for the Orangecat_Company B2B module — exposes the authenticated customer's company via the storefront GraphQL API. Proposed contribution to the Orangecat B2B suite.",
+    "type": "magento2-module",
+    "license": [
+        "OSL-3.0"
+    ],
+    "authors": [
+        {
+            "name": "Nicolas Peric",
+            "role": "Developer"
+        }
+    ],
+    "keywords": [
+        "magento2",
+        "mage-os",
+        "b2b",
+        "company",
+        "graphql"
+    ],
+    "require": {
+        "php": ">=8.1",
+        "magento/framework": ">=103.0",
+        "orangecat/module-company": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Orangecat\\CompanyGraphQl\\": ""
+        }
+    }
+}

@@ -1,0 +1,38 @@
+type Query {
+    company: Company
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\Company")
+        @doc(description: "Returns the B2B company assigned to the currently authenticated customer, or null if the customer does not belong to a company.")
+}
+
+type Customer {
+    company: Company
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\Company")
+        @doc(description: "The B2B company the customer belongs to, if any.")
+}
+
+type Company @doc(description: "A B2B company account (Orangecat_Company).") {
+    id: Int @doc(description: "Company entity ID.")
+    name: String @doc(description: "Company name.")
+    legal_name: String @doc(description: "Legal / registered company name.")
+    email: String @doc(description: "Company email address.")
+    vat_tax_id: String @doc(description: "Tax / VAT identifier.")
+    address: String @doc(description: "Street address.")
+    city: String @doc(description: "City.")
+    region: String @doc(description: "State / province / region.")
+    postcode: String @doc(description: "ZIP / postal code.")
+    country_code: String @doc(description: "Two-letter country code.")
+    telephone: String @doc(description: "Company phone number.")
+    is_company_admin: Boolean @doc(description: "Whether the authenticated customer is an administrator of this company.")
+    role_id: Int @doc(description: "The authenticated customer's role ID within the company.")
+    users: [CompanyUser] @doc(description: "The company's members (team roster).")
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\CompanyUsers")
+}
+
+type CompanyUser @doc(description: "A member of a B2B company.") {
+    customer_id: Int @doc(description: "Customer entity ID of the member.")
+    firstname: String @doc(description: "Member first name.")
+    lastname: String @doc(description: "Member last name.")
+    email: String @doc(description: "Member email address.")
+    role_id: Int @doc(description: "The member's role ID within the company.")
+    is_company_admin: Boolean @doc(description: "Whether this member is a company administrator.")
+}
