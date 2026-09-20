@@ -1,0 +1,85 @@
+# Example queries & mutations for Orangecat_CompanyGraphQl.
+#
+# All operations require an authenticated customer — send the header:
+#   Authorization: Bearer <customer token>
+# (obtain a token with the standard `generateCustomerToken` mutation).
+
+# --- Queries ---
+
+# The authenticated customer's company, with roster and assignable roles.
+query MyCompany {
+  company {
+    id
+    name
+    legal_name
+    email
+    vat_tax_id
+    address
+    city
+    region
+    postcode
+    country_code
+    telephone
+    is_company_admin
+    role_id
+    users {
+      customer_id
+      firstname
+      lastname
+      email
+      role_id
+      is_company_admin
+    }
+    roles {
+      id
+      name
+      permissions
+      is_admin_role
+    }
+  }
+}
+
+# The same company, reached from the customer object.
+query CustomerWithCompany {
+  customer {
+    firstname
+    lastname
+    company {
+      name
+      is_company_admin
+    }
+  }
+}
+
+# --- Mutations (company administrators only) ---
+
+# Update the company profile. Only the fields you pass are changed.
+mutation UpdateCompany {
+  updateCompany(
+    input: { legal_name: "Costello Industries S.A.", telephone: "+1-555-0100" }
+  ) {
+    name
+    legal_name
+    telephone
+  }
+}
+
+# Add an existing customer to the company (or change a member's role).
+mutation AddMember {
+  assignCompanyUser(customer_id: 50, role_id: 3) {
+    users {
+      firstname
+      email
+      role_id
+    }
+  }
+}
+
+# Remove a member from the company.
+mutation RemoveMember {
+  removeCompanyUser(customer_id: 50) {
+    users {
+      email
+    }
+  }
+}

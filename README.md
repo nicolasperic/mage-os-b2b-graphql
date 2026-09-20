@@ -96,6 +96,17 @@ bin/magento setup:upgrade
 bin/magento cache:flush
 ```
 
+> **Not on Packagist yet.** Until it's published, install from source by adding
+> this repo as a VCS repository first:
+>
+> ```bash
+> composer config repositories.company-graphql vcs https://github.com/nicolasperic/mage-os-b2b-graphql
+> composer require nicolasperic/module-company-graphql:dev-main
+> ```
+>
+> See [`examples/queries.graphql`](examples/queries.graphql) for sample
+> operations and [`CONTRIBUTING.md`](CONTRIBUTING.md) to help out.
+
 ## Testing
 
 Unit tests live under `Test/Unit`. They mock Orangecat's service contracts, so
