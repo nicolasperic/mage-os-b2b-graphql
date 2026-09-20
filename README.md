@@ -34,6 +34,9 @@ B2B `company` query where practical.
     users {                 # team roster
       customer_id firstname lastname email role_id is_company_admin
     }
+    roles {                 # roles assignable to members
+      id name permissions is_admin_role
+    }
   }
 }
 

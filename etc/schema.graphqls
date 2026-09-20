@@ -51,6 +51,15 @@ type Company @doc(description: "A B2B company account (Orangecat_Company).") {
     role_id: Int @doc(description: "The authenticated customer's role ID within the company.")
     users: [CompanyUser] @doc(description: "The company's members (team roster).")
         @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\CompanyUsers")
+    roles: [CompanyRole] @doc(description: "Roles that can be assigned to company members.")
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\CompanyRoles")
+}
+
+type CompanyRole @doc(description: "A B2B company role.") {
+    id: Int @doc(description: "Role ID (use as role_id in assignCompanyUser).")
+    name: String @doc(description: "Role name.")
+    permissions: String @doc(description: "Raw permissions payload (JSON) as stored by Orangecat_Company.")
+    is_admin_role: Boolean @doc(description: "Whether this is the administrator role.")
 }
 
 type CompanyUser @doc(description: "A member of a B2B company.") {
