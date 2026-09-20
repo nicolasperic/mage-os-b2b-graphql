@@ -23,6 +23,14 @@
         "magento/framework": ">=103.0",
         "orangecat/module-company": "*"
     },
+    "require-dev": {
+        "magento/magento-coding-standard": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
     "autoload": {
         "files": [
             "registration.php"

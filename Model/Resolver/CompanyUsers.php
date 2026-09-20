@@ -12,20 +12,23 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Orangecat\Company\Api\CompanyManagementInterface;
 use Orangecat\Company\Api\Data\RoleInterface;
 use Orangecat\Company\Model\ResourceModel\CompanyCustomer\CollectionFactory;
 
 /**
  * Resolves the `users` field on Company to the company's member roster.
  *
- * Reads the parent-resolved company id, then joins the Orangecat company↔customer
- * links with core customer records for names and emails.
+ * Access is scoped: company administrators see the full roster, while other
+ * members see only their own entry. This keeps the team directory private to
+ * admins without failing the query for regular members.
  */
 class CompanyUsers implements ResolverInterface
 {
     public function __construct(
         private readonly CollectionFactory $companyCustomerCollectionFactory,
-        private readonly CustomerRepositoryInterface $customerRepository
+        private readonly CustomerRepositoryInterface $customerRepository,
+        private readonly CompanyManagementInterface $companyManagement
     ) {
     }
 
@@ -44,11 +47,18 @@ class CompanyUsers implements ResolverInterface
             return [];
         }
 
-        $links = $this->companyCustomerCollectionFactory->create()
+        $actingCustomerId = (int)$context->getUserId();
+
+        $collection = $this->companyCustomerCollectionFactory->create()
             ->addFieldToFilter('company_id', $companyId);
 
+        // Non-admins may only see themselves in the roster.
+        if (!$this->companyManagement->isCompanyAdmin($actingCustomerId)) {
+            $collection->addFieldToFilter('customer_id', $actingCustomerId);
+        }
+
         $users = [];
-        foreach ($links as $link) {
+        foreach ($collection as $link) {
             $customerId = (int)$link->getData('customer_id');
             $roleId = (int)$link->getData('role_id');
 

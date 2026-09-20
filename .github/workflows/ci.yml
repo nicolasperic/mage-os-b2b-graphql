@@ -26,3 +26,16 @@ jobs:
 
       - name: PHP syntax lint
         run: find . -path ./vendor -prune -o -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      # Install only the coding standard (not the module's magento/framework
+      # dependency, which isn't needed to lint and is heavy to resolve).
+      - name: Install Magento coding standard
+        run: |
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --no-interaction --no-progress magento/magento-coding-standard
+
+      - name: Coding standard (Magento2)
+        # Fails on errors; warnings are reported but non-fatal.
+        run: |
+          PHPCS="$(composer global config home)/vendor/bin/phpcs"
+          "$PHPCS" --standard=Magento2 --extensions=php --runtime-set ignore_warnings_on_exit 1 Model registration.php Test

@@ -15,6 +15,8 @@ use Magento\Framework\GraphQl\Exception\GraphQlAuthorizationException;
 trait AuthenticatedCustomerTrait
 {
     /**
+     * Return the authenticated customer id, or fail for anonymous requests.
+     *
      * @param \Magento\Framework\GraphQl\Query\Resolver\ContextInterface $context
      * @return int The authenticated customer id.
      * @throws GraphQlAuthorizationException
