@@ -11,6 +11,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Orangecat\Company\Api\CompanyManagementInterface;
 use Orangecat\Company\Api\CompanyRepositoryInterface;
 use Orangecat\Company\Api\Data\CompanyInterface;
+use Orangecat\CompanyGraphQl\Model\CompanyFormatter;
 use Orangecat\CompanyGraphQl\Model\Resolver\Company;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +36,11 @@ class CompanyTest extends TestCase
     {
         $this->companyManagement = $this->createMock(CompanyManagementInterface::class);
         $this->companyRepository = $this->createMock(CompanyRepositoryInterface::class);
-        $this->resolver = new Company($this->companyManagement, $this->companyRepository);
+        $this->resolver = new Company(
+            $this->companyManagement,
+            $this->companyRepository,
+            new CompanyFormatter($this->companyManagement)
+        );
     }
 
     public function testThrowsWhenNotAuthenticated(): void

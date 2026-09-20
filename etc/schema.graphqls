@@ -10,6 +10,31 @@ type Customer {
         @doc(description: "The B2B company the customer belongs to, if any.")
 }
 
+type Mutation {
+    updateCompany(input: CompanyUpdateInput!): Company
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\UpdateCompany")
+        @doc(description: "Update the authenticated administrator's own company profile. Only provided fields change.")
+    assignCompanyUser(customer_id: Int!, role_id: Int!): Company
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\AssignCompanyUser")
+        @doc(description: "Add an existing customer to the administrator's company, or change the role of a member. Returns the updated company.")
+    removeCompanyUser(customer_id: Int!): Company
+        @resolver(class: "Orangecat\\CompanyGraphQl\\Model\\Resolver\\RemoveCompanyUser")
+        @doc(description: "Remove a user from the administrator's company. Returns the updated company.")
+}
+
+input CompanyUpdateInput @doc(description: "Fields that can be updated on a company. Omit a field to leave it unchanged.") {
+    name: String
+    legal_name: String
+    email: String
+    vat_tax_id: String
+    address: String
+    city: String
+    region: String
+    postcode: String
+    country_code: String
+    telephone: String
+}
+
 type Company @doc(description: "A B2B company account (Orangecat_Company).") {
     id: Int @doc(description: "Company entity ID.")
     name: String @doc(description: "Company name.")

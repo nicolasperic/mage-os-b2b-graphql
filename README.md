@@ -41,6 +41,38 @@ B2B `company` query where practical.
 { customer { firstname company { name } } }
 ```
 
+### Mutations (company administrators)
+
+Company admins can manage their own company and its members:
+
+```graphql
+# Update the company profile (only provided fields change)
+mutation {
+  updateCompany(input: { legal_name: "Costello Industries S.A.", telephone: "+1-555-0100" }) {
+    name legal_name telephone
+  }
+}
+
+# Add an existing customer to the company, or change a member's role
+mutation {
+  assignCompanyUser(customer_id: 50, role_id: 3) {
+    users { firstname email role_id is_company_admin }
+  }
+}
+
+# Remove a member
+mutation {
+  removeCompanyUser(customer_id: 50) { users { email } }
+}
+```
+
+Mutations require the acting customer to be a **company administrator**
+(`role_id = 1`). They operate only on the admin's own company: `assignCompanyUser`
+refuses a customer who already belongs to another company, and `removeCompanyUser`
+refuses to remove the acting admin. All delegate to Orangecat's
+`CompanyManagementInterface` (`assignCustomer` / `removeCustomer` /
+`validateManageUser`) and `CompanyRepositoryInterface`.
+
 Both entry points require an authenticated customer (send an
 `Authorization: Bearer <customer token>` header). An authenticated customer who
 belongs to no company gets `company: null`; an unauthenticated request is
